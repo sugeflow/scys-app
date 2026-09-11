@@ -1,5 +1,7 @@
 # 生财有术 App
 
+> **非官方项目**：本项目由社区成员独立开发，与生财有术官方无隶属、授权或合作关系。
+
 一个轻量的 Flutter 双端外壳，在 iOS 与 Android 系统 WebView 中打开
 `https://scys.com`。
 

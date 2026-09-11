@@ -3,6 +3,12 @@
 一个轻量的 Flutter 双端外壳，在 iOS 与 Android 系统 WebView 中打开
 `https://scys.com`。
 
+## 应用截图
+
+<p align="center">
+  <img src="docs/screenshots/ios-home-public.png" alt="生财有术 App iOS 首页与原生液态玻璃五栏导航" width="360">
+</p>
+
 ## 应用信息
 
 - 显示名称：生财有术

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class _ScysWebViewPageState extends State<ScysWebViewPage> {
 
   final PageLoadState _loadState = PageLoadState();
   late final WebViewController _controller;
+  late final Future<String> _tokenRankIconDataUrl;
   NativeNavigationBridge? _nativeNavigationBridge;
   IosBackForwardNavigationGestures? _iosBackForwardGestures;
 
@@ -63,6 +65,13 @@ class _ScysWebViewPageState extends State<ScysWebViewPage> {
   void initState() {
     super.initState();
     _loadState.addListener(_refresh);
+    _tokenRankIconDataUrl = rootBundle
+        .load('assets/tokenrank_icon.png')
+        .then(
+          (data) => 'data:image/png;base64,${base64Encode(
+            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+          )}',
+        );
     if (Platform.isIOS) {
       _nativeNavigationBridge = NativeNavigationBridge(_openTab);
     }
@@ -104,6 +113,15 @@ class _ScysWebViewPageState extends State<ScysWebViewPage> {
       await _controller.runJavaScript(scysHideWebBottomNavScript);
     } catch (_) {
       // Navigation remains usable if the page temporarily rejects injection.
+    }
+
+    try {
+      final iconDataUrl = await _tokenRankIconDataUrl;
+      await _controller.runJavaScript(
+        scysTokenRankMenuScript(iconDataUrl),
+      );
+    } catch (_) {
+      // The website menu remains usable if its optional shortcut cannot load.
     }
   }
 

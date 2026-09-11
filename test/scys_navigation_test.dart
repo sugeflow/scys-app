@@ -32,6 +32,44 @@ void main() {
     expect(script, isNot(contains('location.href =')));
   });
 
+  test('adds one TokenRank menu row immediately after AI passport', () {
+    final script = scysTokenRankMenuScript(
+      'data:image/png;base64,icon-data',
+    );
+
+    expect(script, contains('AI 护照'));
+    expect(script, contains('TokenRank'));
+    expect(script, contains('/tokenrank/'));
+    expect(script, contains('data-scys-tokenrank'));
+    expect(script, contains('insertAdjacentElement'));
+    expect(script, contains('MutationObserver'));
+    expect(script, contains('data:image/png;base64,icon-data'));
+  });
+
+  test('measures the rendered passport icon before cloning its menu row', () {
+    final script = scysTokenRankMenuScript('data:image/png;base64,icon-data');
+
+    expect(
+      script,
+      contains("passportItem.querySelector('.menu-icon svg, .menu-icon img')"),
+    );
+    expect(
+      script,
+      isNot(contains("iconContainer?.querySelector('svg, img')")),
+    );
+  });
+
+  test('keeps the cloned menu icon wrapper when swapping the graphic', () {
+    final script = scysTokenRankMenuScript('data:image/png;base64,icon-data');
+
+    expect(
+      script,
+      contains("item.querySelector('.menu-icon svg, .menu-icon img')"),
+    );
+    expect(script, contains('clonedGraphic.replaceWith(icon)'));
+    expect(script, isNot(contains('iconContainer.replaceChildren(icon)')));
+  });
+
   test('recognizes which native tab owns a website location', () {
     expect(
       scysTabIndexForUri(Uri.parse('https://scys.com/mobile/home/index')),

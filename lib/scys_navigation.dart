@@ -75,6 +75,68 @@ String scysTabNavigationScript(String path) {
 ''';
 }
 
+String scysTokenRankMenuScript(String iconDataUrl) {
+  final encodedIconDataUrl = jsonEncode(iconDataUrl);
+  return '''
+(() => {
+  const marker = 'data-scys-tokenrank';
+  const iconDataUrl = $encodedIconDataUrl;
+
+  const installTokenRankItem = () => {
+    if (document.querySelector(`[\${marker}]`)) return;
+
+    const passportLabel = Array.from(
+      document.querySelectorAll('.profile-sidebar .menu-label')
+    ).find((label) => label.textContent?.trim() === 'AI 护照');
+    const passportItem = passportLabel?.closest('.menu-item');
+    if (!passportItem) return;
+
+    const referenceGraphic = passportItem.querySelector('.menu-icon svg, .menu-icon img');
+    const bounds = referenceGraphic?.getBoundingClientRect();
+    const item = passportItem.cloneNode(true);
+    item.setAttribute(marker, 'true');
+    item.setAttribute('role', 'link');
+    item.setAttribute('tabindex', '0');
+
+    const clonedGraphic = item.querySelector('.menu-icon svg, .menu-icon img');
+    if (clonedGraphic && bounds) {
+      const icon = document.createElement('img');
+      icon.src = iconDataUrl;
+      icon.alt = '';
+      icon.style.width = `\${bounds.width}px`;
+      icon.style.height = `\${bounds.height}px`;
+      icon.style.display = 'block';
+      clonedGraphic.replaceWith(icon);
+    }
+
+    const label = item.querySelector('.menu-label');
+    if (label) label.textContent = 'TokenRank';
+
+    const openTokenRank = () => window.location.assign('/tokenrank/');
+    item.addEventListener('click', openTokenRank);
+    item.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openTokenRank();
+      }
+    });
+
+    passportItem.insertAdjacentElement('afterend', item);
+  };
+
+  installTokenRankItem();
+  if (window.__scysTokenRankObserver) {
+    window.__scysTokenRankObserver.disconnect();
+  }
+  window.__scysTokenRankObserver = new MutationObserver(installTokenRankItem);
+  window.__scysTokenRankObserver.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+})();
+''';
+}
+
 const scysHideWebBottomNavScript = r'''
 (() => {
   const paths = [

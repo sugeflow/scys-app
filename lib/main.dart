@@ -85,7 +85,9 @@ class _ScysWebViewPageState extends State<ScysWebViewPage> {
           onProgress: _loadState.updateProgress,
           onPageFinished: _handlePageFinished,
           onWebResourceError: (error) {
-            if (error.isForMainFrame == true) {
+            final isCancelledNavigation =
+                Platform.isIOS && error.errorCode == -999;
+            if (error.isForMainFrame == true && !isCancelledNavigation) {
               _loadState.showError('当前无法连接到生财有术，请检查网络后重试');
             }
           },
@@ -104,6 +106,7 @@ class _ScysWebViewPageState extends State<ScysWebViewPage> {
   }
 
   Future<void> _handlePageFinished(String url) async {
+    _loadState.finishLoading();
     final uri = Uri.tryParse(url);
     if (uri == null || uri.host.toLowerCase() != 'scys.com') {
       return;

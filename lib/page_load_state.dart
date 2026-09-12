@@ -19,6 +19,12 @@ class PageLoadState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void finishLoading() {
+    _progress = 100;
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   void showError(String message) {
     _errorMessage = message;
     _progress = 100;

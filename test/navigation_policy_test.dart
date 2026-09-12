@@ -36,6 +36,28 @@ void main() {
       );
     });
 
+    test('keeps Feishu links inside the app', () {
+      expect(
+        policy.decide(Uri.parse('https://www.feishu.cn/hc/zh-CN/')),
+        NavigationTarget.inApp,
+      );
+      expect(
+        policy.decide(Uri.parse('https://applink.feishu.cn/client/chat/open')),
+        NavigationTarget.inApp,
+      );
+    });
+
+    test('keeps ZSXQ links inside the app', () {
+      expect(
+        policy.decide(Uri.parse('https://zsxq.com/group/123456789')),
+        NavigationTarget.inApp,
+      );
+      expect(
+        policy.decide(Uri.parse('https://wx.zsxq.com/group/123456789')),
+        NavigationTarget.inApp,
+      );
+    });
+
     test('opens unrelated web links outside the app', () {
       expect(
         policy.decide(Uri.parse('https://example.com/article')),
@@ -43,6 +65,14 @@ void main() {
       );
       expect(
         policy.decide(Uri.parse('https://scys.com.evil.example/')),
+        NavigationTarget.external,
+      );
+      expect(
+        policy.decide(Uri.parse('https://feishu.cn.evil.example/')),
+        NavigationTarget.external,
+      );
+      expect(
+        policy.decide(Uri.parse('https://zsxq.com.evil.example/')),
         NavigationTarget.external,
       );
     });

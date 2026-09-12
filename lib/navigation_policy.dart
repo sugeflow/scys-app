@@ -3,7 +3,12 @@ enum NavigationTarget { inApp, external, blocked }
 class NavigationPolicy {
   const NavigationPolicy();
 
-  static const _inAppDomains = <String>{'scys.com', 'shengcaiyoushu.com'};
+  static const _inAppDomains = <String>{
+    'scys.com',
+    'shengcaiyoushu.com',
+    'feishu.cn',
+    'zsxq.com',
+  };
 
   static const _inAppExactHosts = <String>{'open.weixin.qq.com'};
 

@@ -60,7 +60,16 @@ JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home \
 未签名版本包含完整的 iPhone arm64 Release 应用，但不能直接安装到真机；安装前必须用
 Apple 开发者账号和与 `me.suge.scys` 匹配的描述文件签名。
 
-如果手机上已有由其他团队签名、但 Bundle ID 同为 `me.suge.scys` 的旧版本，iOS 不允许直接覆盖；请先备份需要的数据，再删除旧版本后安装。
+### 保留登录状态的更新方式
+
+更新时保持 Bundle ID 和签名团队一致，使用已签名的 `.app` 覆盖安装：
+
+```bash
+xcrun devicectl device install app --device <device-id> <signed-app-path>
+```
+
+不要使用默认的 `flutter install`：当前 Flutter 版本会先卸载旧 App，清除 WebView 的 Cookie 和本地存储，导致需要重新登录。
+覆盖安装失败时先确认签名和设备连接，不自动删除旧 App；涉及删除重装必须先征得用户同意。
 
 ### 真机签名
 
